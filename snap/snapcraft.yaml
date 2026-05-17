@@ -98,7 +98,7 @@ parts:
       DEBIAN_FRONTEND=noninteractive apt-get update
       DEBIAN_FRONTEND=noninteractive apt-get install -y unrar
 
-      unrar x -o+ Mudream.online.rar
+      unrar x -o+ *.rar
 
       echo "==> Moving files into place..."
       find Mudream.online -type f -exec install -Dm 755 "{}" "${CRAFT_PART_INSTALL}/{}" \;
