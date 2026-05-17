@@ -2,15 +2,19 @@
 
 Unofficial Snap Packaging for MuDream.online.
 
-# Downloading the game archive
+Require: Wayland! For best performance and smooth expierence.
 
-Go to [Mudream.online/download](https://mudream.online/download)
+# Install from snap store
 
-Select one of the source for downloading the game.
+You can find MuDream.online directly in snap-store or on the website: https://snapcraft.io/mudream-online
 
-Copy the `rar` archive with the game files inside `snap/local/src/`.
+## Installation from cli
 
-# Requirements
+`sudo snap install mudream-online`
+
+### Building
+
+# Requirements for Building
 
 Distribution needs `snapd` and `snapcraft` installed. Probably `lxd` too.
 
