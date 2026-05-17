@@ -31,10 +31,14 @@ plugs:
 environment:
   WINEARCH: "wow64"
   WINEPREFIX: $SNAP_USER_DATA/wineprefix
-  # WINEDLLOVERRIDES: "winex11.drv=;"
+  WINEDLLOVERRIDES: "winex11.drv=;"
+  WINE_NTSYNC: "1"
+  DRI_PRIME: "1"
 
 apps:
   mudream-online:
+    command-chain:
+      - bin/gpu-2404-wrapper
     command: usr/bin/mudream-online-wrapper
     extensions: [gnome]
     plugs:
@@ -45,49 +49,16 @@ apps:
       - x11
       - wayland
       - opengl
-      - gpu-2404
       - audio-playback
+      - hardware-observe
+      - gpu-2404
 
 parts:
-  winehq-stable:
+  wine:
     plugin: nil
     stage-packages:
       - winehq-stable
-      - x11-xserver-utils
-      - libfreetype6
-      - libfreetype6:i386
-      - libgstreamer1.0-0
-      - libgstreamer1.0-0:i386
-      - libgstreamer-gl1.0-0
-      - libgstreamer-gl1.0-0:i386
-      - gstreamer1.0-plugins-base
-      - gstreamer1.0-plugins-base:i386
-      - libgstreamer-plugins-base1.0-0
-      - libgstreamer-plugins-base1.0-0:i386
-      - gstreamer1.0-plugins-good
-      - gstreamer1.0-plugins-good:i386
-      - libgstreamer-plugins-good1.0-0
-      - libgstreamer-plugins-good1.0-0:i386
-      - gstreamer1.0-plugins-bad
-      - gstreamer1.0-plugins-bad:i386
-      - libgstreamer-plugins-bad1.0-0
-      - libgstreamer-plugins-bad1.0-0:i386
-      - gstreamer1.0-plugins-ugly
-      - gstreamer1.0-plugins-ugly:i386
-      - gstreamer1.0-libav
-      - gstreamer1.0-libav:i386
-      - gstreamer1.0-vaapi
-      - gstreamer1.0-alsa
-      - gstreamer1.0-alsa:i386
-      - gstreamer1.0-gl
-      - gstreamer1.0-gl:i386
-      - gstreamer1.0-x
-      - gstreamer1.0-x:i386
-      - gstreamer1.0-plugins-rtp
-      - gstreamer1.0-tools
-      - gstreamer1.0-tools:i386
-      - libsdl2-2.0-0
-      - libdecor-0-0
+      - winetricks
   mudream-online:
     plugin: nil
     source: ./snap/local/src
@@ -98,9 +69,18 @@ parts:
       DEBIAN_FRONTEND=noninteractive apt-get update
       DEBIAN_FRONTEND=noninteractive apt-get install -y unrar
 
-      unrar x -o+ *.rar
+      unrar x -o+ Mudream.online*.rar
 
       echo "==> Moving files into place..."
       find Mudream.online -type f -exec install -Dm 755 "{}" "${CRAFT_PART_INSTALL}/{}" \;
       mkdir -p ${CRAFT_PART_INSTALL}/usr/bin
       install -Dm755 mudream-online-wrapper ${CRAFT_PART_INSTALL}/usr/bin/
+  gpu-2404:
+    after: [mudream-online]
+    source: https://github.com/canonical/gpu-snap.git
+    plugin: dump
+    override-prime: |
+      craftctl default
+      ${CRAFT_PART_SRC}/bin/gpu-2404-cleanup mesa-2404
+    prime:
+      - bin/gpu-2404-wrapper
