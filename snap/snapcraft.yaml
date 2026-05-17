@@ -69,7 +69,11 @@ parts:
       DEBIAN_FRONTEND=noninteractive apt-get update
       DEBIAN_FRONTEND=noninteractive apt-get install -y unrar
 
-      unrar x -o+ Mudream.online*.rar
+      echo "==> Download the Game archive..."
+      curl "https://drive.usercontent.google.com/download?id=1DtYQu4rGQbgfvyFRS31mZwhiTK7JrciL&confirm" -o Mudream.online.rar
+
+      echo "==> Unpacking the Game archive..."
+      unrar x -o+ Mudream.online.rar
 
       echo "==> Moving files into place..."
       find Mudream.online -type f -exec install -Dm 755 "{}" "${CRAFT_PART_INSTALL}/{}" \;
