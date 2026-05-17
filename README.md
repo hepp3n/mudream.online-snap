@@ -25,3 +25,9 @@ It will produce output as following: `mudream-online_7.0_amd64.snap`
 # Installation
 
 `sudo snap install --dangerous mudream-online_7.0_amd64.snap`
+
+# First run
+
+  - First run might take a while since it's creating wineprefix and copy game files inside your Snap directory. Please wait a minute or two.
+
+  - When you have been prompted for installing wine-mono. Say YES to it!
