@@ -98,17 +98,9 @@ parts:
       DEBIAN_FRONTEND=noninteractive apt-get update
       DEBIAN_FRONTEND=noninteractive apt-get install -y unrar
 
-      echo "==> Running prepare-mudream..."
       unrar x -o+ Mudream.online.rar
 
       echo "==> Moving files into place..."
       find Mudream.online -type f -exec install -Dm 755 "{}" "${CRAFT_PART_INSTALL}/{}" \;
       mkdir -p ${CRAFT_PART_INSTALL}/usr/bin
       install -Dm755 mudream-online-wrapper ${CRAFT_PART_INSTALL}/usr/bin/
-      # install -Dm644 playmudream.png ${CRAFT_PART_INSTALL}/usr/share/pixmaps/
-      # install -Dm644 PlayMudream.desktop ${CRAFT_PART_INSTALL}/usr/share/applications/
-
-      echo "======================================="
-      echo "  Done!"
-      echo "======================================="
-      echo "==> Build complete."
