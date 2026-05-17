@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=7.0
+Type=Application
+Name=PlayMudream
+Comment=Unofficial Mudream.online Snap Package
+Exec=mudream-online
+Terminal=false
+Icon=${SNAP}/meta/gui/mudream-online.png
+Categories=Game;
+StartupWMClass=Mu.exe
+PrefersNonDefaultGPU=true

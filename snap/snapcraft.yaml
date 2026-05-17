@@ -1,0 +1,114 @@
+version: "7.0"
+name: mudream-online
+title: MuDream.online
+summary: Unofficial Mudream.online Snap Package
+description: |
+  MuDream Online offers a private server experience based on the classic MMORPG
+  MU Online. The game has a clear progression system. New content, challenges,
+  and events arrive in stages. This gives you fresh goals to complete over time.
+
+confinement: strict
+base: core24
+grade: stable
+
+package-repositories:
+  - type: apt
+    url: https://dl.winehq.org/wine-builds/ubuntu
+    suites: [noble]
+    components: [main]
+    architectures: [amd64, i386]
+    key-id: D43F640145369C51D786DDEA76F1A20FF987672F
+
+plugs:
+  shmem:
+    interface: shared-memory
+    private: true
+  gpu-2404:
+    interface: content
+    target: $SNAP/gpu-2404
+    default-provider: mesa-2404
+
+environment:
+  WINEARCH: "wow64"
+  WINEPREFIX: $SNAP_USER_DATA/wineprefix
+  WINEDLLOVERRIDES: "winex11.drv=;"
+
+apps:
+  mudream-online:
+    command: usr/bin/mudream-online-wrapper
+    extensions: [gnome]
+    plugs:
+      - home
+      - shmem
+      - network
+      - network-bind
+      - x11
+      - wayland
+      - opengl
+      - gpu-2404
+      - audio-playback
+
+parts:
+  winehq-stable:
+    plugin: nil
+    stage-packages:
+      - winehq-stable
+      - x11-xserver-utils
+      - libfreetype6
+      - libfreetype6:i386
+      - libgstreamer1.0-0
+      - libgstreamer1.0-0:i386
+      - libgstreamer-gl1.0-0
+      - libgstreamer-gl1.0-0:i386
+      - gstreamer1.0-plugins-base
+      - gstreamer1.0-plugins-base:i386
+      - libgstreamer-plugins-base1.0-0
+      - libgstreamer-plugins-base1.0-0:i386
+      - gstreamer1.0-plugins-good
+      - gstreamer1.0-plugins-good:i386
+      - libgstreamer-plugins-good1.0-0
+      - libgstreamer-plugins-good1.0-0:i386
+      - gstreamer1.0-plugins-bad
+      - gstreamer1.0-plugins-bad:i386
+      - libgstreamer-plugins-bad1.0-0
+      - libgstreamer-plugins-bad1.0-0:i386
+      - gstreamer1.0-plugins-ugly
+      - gstreamer1.0-plugins-ugly:i386
+      - gstreamer1.0-libav
+      - gstreamer1.0-libav:i386
+      - gstreamer1.0-vaapi
+      - gstreamer1.0-alsa
+      - gstreamer1.0-alsa:i386
+      - gstreamer1.0-gl
+      - gstreamer1.0-gl:i386
+      - gstreamer1.0-x
+      - gstreamer1.0-x:i386
+      - gstreamer1.0-plugins-rtp
+      - gstreamer1.0-tools
+      - gstreamer1.0-tools:i386
+      - libsdl2-2.0-0
+      - libdecor-0-0
+  mudream-online:
+    plugin: nil
+    source: ./snap/local/src
+    override-build: |
+      craftctl default
+
+      echo "==> Installing build dependencies..."
+      DEBIAN_FRONTEND=noninteractive apt-get update
+      DEBIAN_FRONTEND=noninteractive apt-get install -y unrar
+
+      echo "==> Running prepare-mudream..."
+      unrar x -o+ Mudream.online.rar
+
+      echo "==> Moving files into place..."
+      find Mudream.online -type f -exec install -Dm 755 "{}" "${CRAFT_PART_INSTALL}/{}" \;
+      mkdir -p ${CRAFT_PART_INSTALL}/usr/bin
+      install -Dm755 mudream-online-wrapper ${CRAFT_PART_INSTALL}/usr/bin/
+      # install -Dm644 playmudream.png ${CRAFT_PART_INSTALL}/usr/share/pixmaps/
+      # install -Dm644 PlayMudream.desktop ${CRAFT_PART_INSTALL}/usr/share/applications/
+
+      echo "======================================="
+      echo "  Done!"
+      echo "======================================="
+      echo "==> Build complete."

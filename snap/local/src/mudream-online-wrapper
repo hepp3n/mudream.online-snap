@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+#!/bin/sh
+
+if [ ! -d "$SNAP_USER_DATA/Mudream.online" ]; then
+    mv -v "$SNAP/Mudream.online" \
+       "$SNAP_USER_DATA"
+fi
+
+cd $SNAP_USER_DATA/Mudream.online
+wine PlayMudream.exe
