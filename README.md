@@ -2,11 +2,17 @@
 
 Unofficial Snap Packaging for MuDream.online.
 
+# Downloading the game archive
+
+Go to [Mudream.online/download](https://mudream.online/download)
+
+Select one of the source for downloading the game.
+
+Copy the `rar` archive with the game files inside `snap/local/src/`.
+
 # Requirements
 
-You need to put `rar` archive called `Mudream.online` inside `snap/local/src/`.
-
-Distribution needs `snapd` and `snapcraft` installed
+Distribution needs `snapd` and `snapcraft` installed. Probably `lxd` too.
 
 # Building
 
